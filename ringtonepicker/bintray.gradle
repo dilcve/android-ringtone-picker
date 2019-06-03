@@ -17,8 +17,8 @@ if (project.rootProject.file('local.properties').exists()) {
 
     version = "1.3.1-rf"     // This is the library version used when deploying the artifact
 
-    def siteUrl = 'https://github.com/kevalpatel2106/android-ringtone-picker'        // Homepage URL of the library
-    def gitUrl = 'https://github.com/kevalpatel2106/android-ringtone-picker.git'      // Git repository URL
+    def siteUrl = 'https://github.com/dilcve/android-ringtone-picker'        // Homepage URL of the library
+    def gitUrl = 'https://github.com/dilcve/android-ringtone-picker.git'      // Git repository URL
 
     group = "com.kevalpatel2106"    //Group id
 
