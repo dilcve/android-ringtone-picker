@@ -34,5 +34,5 @@ public interface RingtonePickerListener extends Serializable {
      * @param ringtoneUri  {@link Uri} of the selected ringtone. This may be null if the user selects
      *                     silent ringtone option.
      */
-    void OnRingtoneSelected(@NonNull String ringtoneName, @Nullable Uri ringtoneUri);
+    void OnRingtoneSelected(@Nullable String ringtoneName, @Nullable Uri ringtoneUri);
 }
