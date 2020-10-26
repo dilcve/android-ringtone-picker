@@ -117,7 +117,7 @@ public final class RingtoneUtils {
     @NonNull
     @CheckResult
     @SuppressLint("InlinedApi")
-    @RequiresPermission(anyOf = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE})
+    @RequiresPermission(anyOf = {Manifest.permission.READ_EXTERNAL_STORAGE})
     static LinkedHashMap<String, Uri> getMusic(@NonNull final Context context) {
         final LinkedHashMap<String, Uri> ringToneList = new LinkedHashMap<>();
 
@@ -211,12 +211,12 @@ public final class RingtoneUtils {
     }
 
     /**
-     * Check if the {@link Manifest.permission#WRITE_EXTERNAL_STORAGE} permission is granted?
+     * Check if the {@link Manifest.permission#READ_EXTERNAL_STORAGE} permission is granted?
      *
      * @return True if the read permission granted or else false.
      */
     static boolean checkForStorageReadPermission(@NonNull final Context context) {
-        return ActivityCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        return ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE)
                 == PackageManager.PERMISSION_GRANTED;
     }
 }

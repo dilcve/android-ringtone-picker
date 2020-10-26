@@ -2,12 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/android-ringtone-picker.iml" filepath="$PROJECT_DIR$/android-ringtone-picker.iml" />
-      <module fileurl="file://$PROJECT_DIR$/android-ringtone-picker.iml" filepath="$PROJECT_DIR$/android-ringtone-picker.iml" />
-      <module fileurl="file://$PROJECT_DIR$/ringtonepicker/ringtonepicker.iml" filepath="$PROJECT_DIR$/ringtonepicker/ringtonepicker.iml" />
-      <module fileurl="file://$PROJECT_DIR$/ringtonepicker/ringtonepicker.iml" filepath="$PROJECT_DIR$/ringtonepicker/ringtonepicker.iml" />
-      <module fileurl="file://$PROJECT_DIR$/sample/sample.iml" filepath="$PROJECT_DIR$/sample/sample.iml" />
-      <module fileurl="file://$PROJECT_DIR$/sample/sample.iml" filepath="$PROJECT_DIR$/sample/sample.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ringtonepicker/android-ringtone-picker.ringtonepicker.iml" filepath="$PROJECT_DIR$/.idea/modules/ringtonepicker/android-ringtone-picker.ringtonepicker.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/sample/android-ringtone-picker.sample.iml" filepath="$PROJECT_DIR$/.idea/modules/sample/android-ringtone-picker.sample.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/workspace.android-ringtone-picker.iml" filepath="$PROJECT_DIR$/.idea/modules/workspace.android-ringtone-picker.iml" />
     </modules>
   </component>
 </project>
