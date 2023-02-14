@@ -12,8 +12,8 @@
  */
 
 apply plugin: 'com.android.library'
-//apply plugin: 'com.github.dcendents.android-maven'
-apply plugin: 'maven-publish'
+apply plugin: 'com.github.dcendents.android-maven'
+//apply plugin: 'maven-publish'
 
 group='com.github.dilcve'
 
@@ -32,17 +32,17 @@ android {
     }
 }
 
-publishing {
-    publications {
-        maven(MavenPublication) {
-            groupId = 'com.github.dilcve'
-            artifactId = 'ringtonepicker'
-            version = 'v1.3.3'
-        }
-    }
-}
+//publishing {
+//    publications {
+//        maven(MavenPublication) {
+//            groupId = 'com.dilcve'
+//            artifactId = 'ringtonepicker'
+//            version = 'v1.3.3'
+//        }
+//    }
+//}
 
 dependencies {
     implementation 'androidx.appcompat:appcompat:1.0.2'
 }
-//apply from: 'bintray.gradle'
+apply from: 'bintray.gradle'
