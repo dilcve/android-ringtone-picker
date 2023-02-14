@@ -356,7 +356,7 @@ public final class RingtonePickerDialog extends DialogFragment implements Ringto
     @Override
     public void onLoadComplete(@NonNull HashMap<String, Uri> ringtone) {
         mViewFlipper.setDisplayedChild(1);
-        mRingTones.putAll(ringtone);
+        mRingTones.putAll(new TreeMap<>(ringtone));
 
         final String[] itemTitles = mRingTones.keySet().toArray(new String[mRingTones.size()]);
         int currentSelectionPos = getUriPosition(mRingTones, mCurrentRingTone.second);
