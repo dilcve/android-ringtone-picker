@@ -211,13 +211,21 @@ public final class RingtoneUtils {
         }
     }
 
+    private static String getMediaAudioPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            return Manifest.permission.READ_MEDIA_AUDIO;
+        } else {
+            return Manifest.permission.READ_EXTERNAL_STORAGE;
+        }
+    }
+
     /**
      * Check if the {@link Manifest.permission#READ_EXTERNAL_STORAGE} permission is granted?
      *
      * @return True if the read permission granted or else false.
      */
     static boolean checkForStorageReadPermission(@NonNull final Context context) {
-        return ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE)
+        return ActivityCompat.checkSelfPermission(context, getMediaAudioPermission())
                 == PackageManager.PERMISSION_GRANTED;
     }
 }
