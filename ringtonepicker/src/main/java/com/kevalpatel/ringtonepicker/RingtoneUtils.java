@@ -22,6 +22,7 @@ import android.database.Cursor;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.MediaStore;
 import androidx.annotation.CheckResult;
 import androidx.annotation.NonNull;
@@ -117,7 +118,7 @@ public final class RingtoneUtils {
     @NonNull
     @CheckResult
     @SuppressLint("InlinedApi")
-    @RequiresPermission(anyOf = {Manifest.permission.READ_EXTERNAL_STORAGE})
+    @RequiresPermission(anyOf = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.READ_MEDIA_AUDIO})
     static LinkedHashMap<String, Uri> getMusic(@NonNull final Context context) {
         final LinkedHashMap<String, Uri> ringToneList = new LinkedHashMap<>();
 

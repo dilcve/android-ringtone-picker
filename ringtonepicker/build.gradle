@@ -18,7 +18,7 @@ apply plugin: 'com.github.dcendents.android-maven'
 group='com.github.dilcve'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 33
 
     // This is important, it will run lint checks but won't abort build
     lintOptions {
@@ -27,7 +27,7 @@ android {
 
     defaultConfig {
         minSdkVersion 15
-        targetSdkVersion 28
+        targetSdkVersion 33
         consumerProguardFiles 'proguard-rules.pro'
     }
 }
@@ -43,6 +43,6 @@ android {
 //}
 
 dependencies {
-    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'androidx.appcompat:appcompat:1.4.2'
 }
 apply from: 'bintray.gradle'
