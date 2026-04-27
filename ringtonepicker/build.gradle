@@ -39,7 +39,7 @@ afterEvaluate {
                 from components.release
                 groupId = 'com.github.dilcve'
                 artifactId = 'android-ringtone-picker'
-                version = 'v1.3.10'
+                version = 'v1.3.11'
             }
         }
     }

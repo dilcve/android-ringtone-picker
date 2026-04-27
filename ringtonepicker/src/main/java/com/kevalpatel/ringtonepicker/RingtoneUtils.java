@@ -127,11 +127,12 @@ public final class RingtoneUtils {
             throw new IllegalStateException("Storage permission is not available.");
         }
 
-        //Prepare query
+        //Prepare query — exclude WhatsApp audio files (prefixed with "AUD-")
         final Cursor mediaCursor = context.getContentResolver()
                 .query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                         new String[]{MediaStore.Audio.Media.TITLE, MediaStore.Audio.Media._ID},
-                        MediaStore.Audio.Media.IS_MUSIC + "!= 0",
+                        MediaStore.Audio.Media.IS_MUSIC + " != 0 AND "
+                                + MediaStore.Audio.Media.DISPLAY_NAME + " NOT LIKE 'AUD-%'",
                         null,
                         MediaStore.Audio.Media.TITLE + " ASC");
 
