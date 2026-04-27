@@ -32,18 +32,18 @@ android {
     }
 }
 
-//afterEvaluate {
-//    publishing {
-//        publications {
-//            release(MavenPublication) {
-//                from components.release
-//                groupId = 'com.dilcve'
-//                artifactId = 'ringtonepicker'
-//                version = '1.3.9-SNAPSHOT'
-//            }
-//        }
-//    }
-//}
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.release
+                groupId = 'com.github.dilcve'
+                artifactId = 'android-ringtone-picker'
+                version = 'v1.3.9'
+            }
+        }
+    }
+}
 
 dependencies {
     implementation 'androidx.appcompat:appcompat:1.4.2'
