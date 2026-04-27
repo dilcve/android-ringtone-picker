@@ -12,13 +12,13 @@
  */
 
 apply plugin: 'com.android.library'
-apply plugin: 'com.github.dcendents.android-maven'
-//apply plugin: 'maven-publish'
+apply plugin: 'maven-publish'
 
 group='com.github.dilcve'
 
 android {
     compileSdkVersion 33
+    namespace 'com.kevalpatel.ringtonepicker'
 
     // This is important, it will run lint checks but won't abort build
     lintOptions {
@@ -32,12 +32,15 @@ android {
     }
 }
 
-//publishing {
-//    publications {
-//        maven(MavenPublication) {
-//            groupId = 'com.dilcve'
-//            artifactId = 'ringtonepicker'
-//            version = 'v1.3.3'
+//afterEvaluate {
+//    publishing {
+//        publications {
+//            release(MavenPublication) {
+//                from components.release
+//                groupId = 'com.dilcve'
+//                artifactId = 'ringtonepicker'
+//                version = '1.3.9-SNAPSHOT'
+//            }
 //        }
 //    }
 //}
@@ -45,4 +48,3 @@ android {
 dependencies {
     implementation 'androidx.appcompat:appcompat:1.4.2'
 }
-apply from: 'bintray.gradle'

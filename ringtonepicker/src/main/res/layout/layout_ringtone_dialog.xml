@@ -11,21 +11,56 @@
   ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for
   ~  the specific language governing permissions and limitations under the License.
   -->
-<ViewFlipper
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/view_flipper"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <!--0. Progress-->
-    <ProgressBar
-        android:layout_width="60dp"
-        android:layout_height="80dp"
-        android:layout_gravity="center"/>
-
-    <!--1. Ringtone list-->
-    <ListView
-        android:id="@+id/ringtone_list"
+    <EditText
+        android:id="@+id/ringtone_search"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-</ViewFlipper>
+        android:layout_height="wrap_content"
+        android:hint="@string/ringtone_picker_search_hint"
+        android:inputType="text"
+        android:drawableStart="@drawable/ic_search"
+        android:drawablePadding="8dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:background="@null"
+        android:visibility="gone" />
+
+    <ViewFlipper
+        android:id="@+id/view_flipper"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!--0. Progress-->
+        <ProgressBar
+            android:layout_width="60dp"
+            android:layout_height="80dp"
+            android:layout_gravity="center"/>
+
+        <!--1. Ringtone list-->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ListView
+                android:id="@+id/ringtone_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+            <TextView
+                android:id="@+id/ringtone_empty"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="@string/ringtone_picker_no_results"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:visibility="gone" />
+        </FrameLayout>
+    </ViewFlipper>
+</LinearLayout>

@@ -15,6 +15,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 33
+    namespace 'com.ringtonepicker.sample'
 
     // This is important, it will run lint checks but won't abort build
     lintOptions {

@@ -15,4 +15,6 @@
     <string name="ringtone_picker_default_title">Select ringtone</string>
     <string name="title_default_list_item">Default</string>
     <string name="title_silent_list_item">Silent</string>
+    <string name="ringtone_picker_search_hint">Search</string>
+    <string name="ringtone_picker_no_results">No results found</string>
 </resources>

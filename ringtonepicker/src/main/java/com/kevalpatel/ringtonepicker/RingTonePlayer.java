@@ -16,6 +16,9 @@ package com.kevalpatel.ringtonepicker;
 import android.content.Context;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Looper;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import android.util.Log;
@@ -31,6 +34,8 @@ import java.io.IOException;
  */
 final class RingTonePlayer implements Closeable {
 
+    private static final long PREVIEW_DURATION_MS = 5000;
+
     @NonNull
     private final Context mContext;
 
@@ -39,6 +44,19 @@ final class RingTonePlayer implements Closeable {
      */
     @NonNull
     private final MediaPlayer mMediaPlayer;
+
+    @NonNull
+    private final Handler mHandler = new Handler(Looper.getMainLooper());
+
+    private final Runnable mStopRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (mMediaPlayer.isPlaying()) {
+                mMediaPlayer.stop();
+            }
+            mMediaPlayer.reset();
+        }
+    };
 
     /**
      * Public constructor.
@@ -49,7 +67,8 @@ final class RingTonePlayer implements Closeable {
     }
 
     /**
-     * Play the ringtone for the given uri.
+     * Play the ringtone for the given uri. Playback stops automatically after
+     * {@link #PREVIEW_DURATION_MS} milliseconds.
      *
      * @param uri uri of the ringtone to play.
      * @throws IOException if it cannot play the ringtone.
@@ -58,6 +77,8 @@ final class RingTonePlayer implements Closeable {
             IllegalArgumentException,
             SecurityException,
             IllegalStateException {
+
+        mHandler.removeCallbacks(mStopRunnable);
 
         if (mMediaPlayer.isPlaying()) {
             mMediaPlayer.stop();
@@ -72,6 +93,8 @@ final class RingTonePlayer implements Closeable {
         mMediaPlayer.setDataSource(mContext, uri);
         mMediaPlayer.prepare();
         mMediaPlayer.start();
+
+        mHandler.postDelayed(mStopRunnable, PREVIEW_DURATION_MS);
     }
 
     /**
@@ -79,6 +102,7 @@ final class RingTonePlayer implements Closeable {
      */
     @Override
     public void close() {
+        mHandler.removeCallbacks(mStopRunnable);
         if (mMediaPlayer.isPlaying()) mMediaPlayer.stop();
         mMediaPlayer.release();
     }

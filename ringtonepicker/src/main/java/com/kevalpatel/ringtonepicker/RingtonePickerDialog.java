@@ -23,14 +23,21 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.graphics.drawable.Drawable;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Pair;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.ViewFlipper;
 
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
@@ -65,6 +72,7 @@ public final class RingtonePickerDialog extends DialogFragment implements Ringto
     private static final String ARG_IS_PLAY = "arg_is_play";
     private static final String ARG_IS_DISPLAY_DEFAULT = "arg_is_display_default";
     private static final String ARG_IS_DISPLAY_SILENT = "arg_is_display_silent";
+    private static final String ARG_IS_SEARCH_ENABLED = "arg_is_search_enabled";
 
     /**
      * {@link Context} of the application. The dialog theme will be derived from this {@link Context}.
@@ -98,6 +106,13 @@ public final class RingtonePickerDialog extends DialogFragment implements Ringto
 
     private boolean isDisplaySilent;
 
+    private boolean isSearchEnabled;
+
+    /**
+     * Filtered list of ringtone names currently displayed in the ListView.
+     */
+    private ArrayList<String> mFilteredNames = new ArrayList<>();
+
     /**
      * Key-value {@link Pair} of the selected ringtone name and {@link Uri}.
      */
@@ -118,7 +133,9 @@ public final class RingtonePickerDialog extends DialogFragment implements Ringto
     private String mNegativeButtonTitle;
 
     private ListView mListView;
+    private TextView mEmptyView;
     private ViewFlipper mViewFlipper;
+    private EditText mSearchEditText;
 
     /**
      * Public constructor.
@@ -151,7 +168,8 @@ public final class RingtonePickerDialog extends DialogFragment implements Ringto
                                              @NonNull final RingtonePickerListener listener,
                                              final boolean isPlaySample,
                                              final boolean isDisplayDefault,
-                                             final boolean isDisplaySilent) {
+                                             final boolean isDisplaySilent,
+                                             final boolean isSearchEnabled) {
 
         // Prepare arguments bundle
         Bundle bundle = new Bundle();
@@ -163,6 +181,7 @@ public final class RingtonePickerDialog extends DialogFragment implements Ringto
         bundle.putBoolean(ARG_IS_PLAY, isPlaySample);
         bundle.putBoolean(ARG_IS_DISPLAY_DEFAULT, isDisplayDefault);
         bundle.putBoolean(ARG_IS_DISPLAY_SILENT, isDisplaySilent);
+        bundle.putBoolean(ARG_IS_SEARCH_ENABLED, isSearchEnabled);
         bundle.putSerializable(ARG_LISTENER, listener);
 
         RingtonePickerDialog ringtonePickerDialog = new RingtonePickerDialog();
@@ -225,6 +244,7 @@ public final class RingtonePickerDialog extends DialogFragment implements Ringto
         isPlaySample = getArguments().getBoolean(ARG_IS_PLAY, false);
         isDisplayDefault = getArguments().getBoolean(ARG_IS_DISPLAY_DEFAULT, false);
         isDisplaySilent = getArguments().getBoolean(ARG_IS_DISPLAY_SILENT, false);
+        isSearchEnabled = getArguments().getBoolean(ARG_IS_SEARCH_ENABLED, false);
 
         //Parse ringtone types.
         mRingtoneTypes = getArguments().getIntegerArrayList(ARG_RINGTONE_TYPES);
@@ -277,12 +297,14 @@ public final class RingtonePickerDialog extends DialogFragment implements Ringto
 
         //Set list
         mListView = customView.findViewById(R.id.ringtone_list);
+        mEmptyView = customView.findViewById(R.id.ringtone_empty);
+        mListView.setEmptyView(mEmptyView);
 
         mListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                final String currentToneTitle = (String) mListView.getAdapter().getItem(position);
+                final String currentToneTitle = mFilteredNames.get(position);
                 mCurrentRingTone = new Pair<>(
                         currentToneTitle,
                         mRingTones.get(currentToneTitle)
@@ -299,6 +321,54 @@ public final class RingtonePickerDialog extends DialogFragment implements Ringto
                 }
             }
         });
+
+        //Set up search
+        mSearchEditText = customView.findViewById(R.id.ringtone_search);
+        if (isSearchEnabled) {
+            mSearchEditText.setVisibility(View.VISIBLE);
+            final Drawable clearIcon = AppCompatResources.getDrawable(mContext, R.drawable.ic_clear);
+
+            mSearchEditText.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    filterRingtones(s.toString());
+                    // Show/hide clear button
+                    mSearchEditText.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                            AppCompatResources.getDrawable(mContext, R.drawable.ic_search),
+                            null,
+                            s.length() > 0 ? clearIcon : null,
+                            null);
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                }
+            });
+
+            mSearchEditText.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                @SuppressLint("ClickableViewAccessibility")
+                public boolean onTouch(View v, MotionEvent event) {
+                    if (event.getAction() == MotionEvent.ACTION_UP) {
+                        Drawable endDrawable = mSearchEditText.getCompoundDrawablesRelative()[2];
+                        if (endDrawable != null) {
+                            int drawableStart = mSearchEditText.getWidth()
+                                    - mSearchEditText.getPaddingEnd()
+                                    - endDrawable.getIntrinsicWidth();
+                            if (event.getX() >= drawableStart) {
+                                mSearchEditText.setText("");
+                                return true;
+                            }
+                        }
+                    }
+                    return false;
+                }
+            });
+        }
 
         mViewFlipper = customView.findViewById(R.id.view_flipper);
         mViewFlipper.setDisplayedChild(0);
@@ -359,14 +429,37 @@ public final class RingtonePickerDialog extends DialogFragment implements Ringto
         mViewFlipper.setDisplayedChild(1);
         mRingTones.putAll(new TreeMap<>(ringtone));
 
-        final String[] itemTitles = mRingTones.keySet().toArray(new String[mRingTones.size()]);
+        mFilteredNames = new ArrayList<>(mRingTones.keySet());
         int currentSelectionPos = getUriPosition(mRingTones, mCurrentRingTone.second);
 
         mListView.setAdapter(new ArrayAdapter<>(mContext,
                 android.R.layout.select_dialog_singlechoice,
-                itemTitles));
+                mFilteredNames));
         mListView.setSelection(currentSelectionPos);
         mListView.setItemChecked(currentSelectionPos, true);
+    }
+
+    private void filterRingtones(@NonNull String query) {
+        mFilteredNames.clear();
+        if (query.isEmpty()) {
+            mFilteredNames.addAll(mRingTones.keySet());
+        } else {
+            String lowerQuery = query.toLowerCase();
+            for (String name : mRingTones.keySet()) {
+                if (name.toLowerCase().contains(lowerQuery)) {
+                    mFilteredNames.add(name);
+                }
+            }
+        }
+        ((ArrayAdapter<?>) mListView.getAdapter()).notifyDataSetChanged();
+
+        // Restore checked state if current selection is visible
+        if (mCurrentRingTone.first != null) {
+            int pos = mFilteredNames.indexOf(mCurrentRingTone.first);
+            if (pos >= 0) {
+                mListView.setItemChecked(pos, true);
+            }
+        }
     }
 
     /**
@@ -456,6 +549,14 @@ public final class RingtonePickerDialog extends DialogFragment implements Ringto
          * @see #displaySilentRingtone(boolean)
          */
         private boolean isDisplaySilent = false;
+
+        /**
+         * Boolean to enable search/filter field above the ringtone list.
+         * Default value is <code>false</code>.
+         *
+         * @see #setSearchEnabled(boolean)
+         */
+        private boolean isSearchEnabled = false;
 
         /**
          * Currently selected ringtone {@link Uri}.
@@ -657,6 +758,18 @@ public final class RingtonePickerDialog extends DialogFragment implements Ringto
         }
 
         /**
+         * Enable search/filter field to filter ringtones by name. This is optional
+         * parameter to set. Default value is false.
+         *
+         * @param enabled True to show the search field.
+         * @return {@link Builder}
+         */
+        public Builder setSearchEnabled(final boolean enabled) {
+            isSearchEnabled = enabled;
+            return this;
+        }
+
+        /**
          * Show {@link RingtonePickerDialog}.
          *
          * @throws IllegalArgumentException if any ringtone type is not selected.
@@ -675,7 +788,8 @@ public final class RingtonePickerDialog extends DialogFragment implements Ringto
                     mListener,
                     isPlaySample,
                     isDisplayDefault,
-                    isDisplaySilent);
+                    isDisplaySilent,
+                    isSearchEnabled);
         }
     }
 }

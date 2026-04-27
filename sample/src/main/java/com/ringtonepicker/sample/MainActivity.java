@@ -16,6 +16,7 @@ package com.ringtonepicker.sample;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -73,8 +74,8 @@ public class MainActivity extends AppCompatActivity {
                 //Validate if at least one ringtone type is selected.
                 if (!musicCb.isChecked()
                         && !notificationCb.isChecked()
-                        && alarmCb.isChecked()
-                        && musicCb.isChecked()) {
+                        && !alarmCb.isChecked()
+                        && !ringtoneCb.isChecked()) {
 
                     Toast.makeText(MainActivity.this, R.string.error_no_ringtone_type,
                             Toast.LENGTH_SHORT).show();
@@ -82,8 +83,10 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 //Application needs read storage permission for Builder.TYPE_MUSIC .
-                if (ActivityCompat.checkSelfPermission(MainActivity.this,
-                        Manifest.permission.READ_EXTERNAL_STORAGE)
+                String permission = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+                        ? Manifest.permission.READ_MEDIA_AUDIO
+                        : Manifest.permission.READ_EXTERNAL_STORAGE;
+                if (ActivityCompat.checkSelfPermission(MainActivity.this, permission)
                         == PackageManager.PERMISSION_GRANTED) {
 
                     RingtonePickerDialog.Builder ringtonePickerBuilder = new RingtonePickerDialog
@@ -114,6 +117,9 @@ public class MainActivity extends AppCompatActivity {
                             //Set flag true if you want to play the sample of the clicked tone.
                             .setPlaySampleWhileSelection(playRingtoneSwitch.isChecked())
 
+                            //Enable search/filter field.
+                            .setSearchEnabled(true)
+
                             //Set the callback listener.
                             .setListener(new RingtonePickerListener() {
                                 @Override
@@ -138,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
                     ringtonePickerBuilder.show();
                 } else {
                     ActivityCompat.requestPermissions(MainActivity.this,
-                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                            new String[]{permission},
                             123);
                 }
             }
